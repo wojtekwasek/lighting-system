@@ -3,11 +3,14 @@ using namespace sc_core;
 
 SC_MODULE(Room)
 {
-  sc_in<bool> light;
+  sc_in<bool> enter_signal; 
+  sc_in<bool> exit_signal;
+  sc_out<bool> light;       
+  sc_out<bool> alarm;      
 
   int people_count;
 
-  void switch_lights()
+  void check_switch_lights()
   {
     if(people_count > 0)
     {
@@ -20,10 +23,30 @@ SC_MODULE(Room)
 
   }
 
+  void check_alarm()
+  {
+    if(people_count < 0 || people_count > 20)
+    {
+      alarm.write(true);
+    }
+  }
+
+  void check_ppl_count() {
+
+    if (enter_signal.read()) {
+      occupancy++;
+    } else if (exit_signal.read()) {
+      occupancy--;
+    }
+    check_switch_lights();
+    check_alarm();
+  }
+
+
 
 }
 
-SC_MODULE(sensor)
+SC_MODULE(cd_sensor)
 {
 
 }
