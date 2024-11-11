@@ -42,12 +42,25 @@ SC_MODULE(Room)
     check_alarm();
   }
 
-
-
 }
+
 
 SC_MODULE(cd_sensor)
 {
+  sc_out<bool> enter_signal;
+  sc_out<bool> exit_signal;
+
+  void generate_pulse(bool enter) {
+    if (enter) {
+      enter_signal.write(true);
+      wait(1, SC_NS);
+      enter_signal.write(false);
+    } else {
+      exit_signal.write(true);
+      wait(1, SC_NS);
+      exit_signal.write(false);
+    }
+  }
 
 }
 
